@@ -22,7 +22,7 @@ public class BankonetRestController {
 	@Autowired
 	IClientMetier bankonetMetier;
 
-	@RequestMapping(value="listClients/{keyWord}", method=RequestMethod.GET)
+	@RequestMapping(value="/listClients/{keyWord}", method=RequestMethod.GET)
 	@ResponseBody
 	public List<Client> searchByKeyWord(@PathVariable("keyWord") String keyWord){
 		return bankonetMetier.chercherClients(keyWord);
@@ -40,6 +40,11 @@ public class BankonetRestController {
 	public void deleteClient(@PathVariable("id") int id) {
 		bankonetMetier.deleteClient(id);
 	}
-
+	
+	@RequestMapping(value="/", method=RequestMethod.GET)
+	@ResponseBody
+	public List<Client> listClient(){
+		return bankonetMetier.listClients();
+	}
 
 }

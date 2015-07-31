@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.context.annotation.FilterType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,6 +16,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
@@ -22,8 +24,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan("com.bankonet")
-@PropertySource("jdbc.properties")
+@ComponentScan(basePackages = "com.bankonet", excludeFilters = { @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = BankonetMVCConfig.class) })
+@PropertySource("classpath:jdbc.properties")
 @EnableTransactionManagement
 public class BankonetAppConfig {
 
@@ -74,8 +76,10 @@ public class BankonetAppConfig {
 		return factory.getObject();
 	}
 	
-	@Bean
-	public PlatformTransactionManager getPlatformTransactionManager(){
+	@Bean(name="transactionManager")
+	public PlatformTransactionManager txManager(){
 		return new DataSourceTransactionManager(dataSource());
 	}
+	
+
 }
